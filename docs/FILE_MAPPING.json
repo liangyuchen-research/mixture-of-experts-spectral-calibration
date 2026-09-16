@@ -1,27 +1,33 @@
 [
   {
     "archive_relative_path": "Code v6/00_run_all.ipynb",
-    "curated_path": "notebooks/00_run_all.ipynb"
+    "curated_path": "notebooks/00_run_all.ipynb",
+    "publication_status": "Preserved in the private source archive; not a public executable entry point."
   },
   {
     "archive_relative_path": "Code v6/01_data_preprocessing.ipynb",
-    "curated_path": "notebooks/01_data_preprocessing.ipynb"
+    "curated_path": "notebooks/01_data_preprocessing.ipynb",
+    "publication_status": "Preserved in the private source archive; not a public executable entry point."
   },
   {
     "archive_relative_path": "Code v6/02_stage1_naca.ipynb",
-    "curated_path": "notebooks/02_stage1_naca.ipynb"
+    "curated_path": "notebooks/02_stage1_naca.ipynb",
+    "publication_status": "Preserved in the private source archive; not a public executable entry point."
   },
   {
     "archive_relative_path": "Code v6/03_stage2_add_k.ipynb",
-    "curated_path": "notebooks/03_stage2_add_k.ipynb"
+    "curated_path": "notebooks/03_stage2_add_k.ipynb",
+    "publication_status": "Preserved in the private source archive; not a public executable entry point."
   },
   {
     "archive_relative_path": "Code v6/04_stage3_add_mg.ipynb",
-    "curated_path": "notebooks/04_stage3_add_mg.ipynb"
+    "curated_path": "notebooks/04_stage3_add_mg.ipynb",
+    "publication_status": "Preserved in the private source archive; not a public executable entry point."
   },
   {
     "archive_relative_path": "Code v6/05_testing_evaluation.ipynb",
-    "curated_path": "notebooks/05_testing_evaluation.ipynb"
+    "curated_path": "notebooks/05_testing_evaluation.ipynb",
+    "publication_status": "Preserved in the private source archive; not a public executable entry point."
   },
   {
     "archive_relative_path": "Calibration curve with normalization (MoE).py",

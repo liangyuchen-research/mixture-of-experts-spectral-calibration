@@ -28,7 +28,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--archive-root", type=Path, required=True)
     parser.add_argument("--destination", type=Path, default=ROOT / "data" / "local")
-    parser.add_argument("--verify-only", action="store_true", help="Verify archive files without copying.")
+    parser.add_argument(
+        "--verify-only", action="store_true", help="Verify archive files without copying."
+    )
     args = parser.parse_args()
     archive = args.archive_root.resolve(strict=True)
     destination = args.destination.resolve()
@@ -48,7 +50,9 @@ def main():
                 continue
             if target.exists():
                 if not target.is_file() or sha256(target) != entry["sha256"]:
-                    raise FileExistsError("Destination exists with different content; left untouched.")
+                    raise FileExistsError(
+                        "Destination exists with different content; left untouched."
+                    )
                 continue
             target.parent.mkdir(parents=True, exist_ok=True)
             # Exclusive creation protects against replacing a file created by another process.

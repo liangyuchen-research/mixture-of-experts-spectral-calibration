@@ -1,35 +1,28 @@
-# Reproducibility status and retained limitations
+# Reproduction notes
 
-## Missing source
+## Public analysis workflow
 
-The canonical version-6 notebooks all import `spice_moe.py`. The matching module is not available in this repository or its research archive. The original analysis documentation also references absent `matrix_calibration.py`, `calibration_per_matrix.py`, and additional analysis notebooks.
+The command-line entry points require NumPy, pandas, and scikit-learn. Paths are supplied as arguments. Outputs are written to new directories, and a pre-existing destination is rejected. The raw-record parser validates complete groups, finite values, and consistent wavelength grids before writing results.
 
-Model architecture, loss computation, sampling, splitting, checkpoint reconstruction, and most evaluation functions are delegated to the missing shared module. Syntax checks cannot establish runtime correctness without it. The notebooks now fail with a clear missing-runtime message before creating run artifacts.
+The maintained implementation retains the original detector count, filename conditions, background subtraction, wavelength-specific baselines, sample standard deviations, and consecutive groups of three. Grouping uses only observed condition combinations instead of iterating through a Cartesian product. Invalid or incomplete record groups now fail explicitly instead of silently dropping measurements. The raw input is never modified.
 
-## Historical evidence
+The calibration retains the original peak/background wavelengths and nearest-grid selection. Zero/nonfinite normalization references and noninvertible calibration slopes now raise a descriptive error. The original testing-label division by 10 is an explicit argument. Its historical area-normalization option still masks specified windows during training and integrates the first 400 positions during testing. This asymmetry requires experimental justification before reuse.
 
-The archive contains an executed notebook set dated 2026-09-08, stage checkpoint files, and analysis CSVs. An earlier HTML note states that TensorFlow training had not yet run; that statement predates the available executed notebook evidence and is not used as the current status.
+## Preserved model research
 
-The archived stage-1 output contains a severe Cu readout anomaly, while later-stage logs show different behavior. The snapshot is retained as research history, not presented as a fully resolved or uniformly successful experiment. Recovery of the exact source and environment is needed to investigate checkpoint lineage, numerical stability, and evaluation discrepancies.
+The original version-6 notebooks import an unavailable `spice_moe.py` module. Architecture, losses, sampling, data splitting, checkpoint construction, and most model evaluation are delegated to that missing source. Earlier analysis notes also refer to unavailable `matrix_calibration.py` and `calibration_per_matrix.py` files.
 
-## Evaluation limits
+These dependent notebook copies are preserved in the private research archive with hashes. They are not runnable public entry points. No replacement model was invented from descriptive notes or checkpoints. The available measurement-processing, calibration, and archived-result code is independent of that runtime.
 
-- Archived testing uses metal concentrations of 3 and 5 ppm. Two levels provide limited evidence for calibration shape or broader-range behavior.
-- The final notebook fits calibration on clean rows from the test table and uses measurement repeatability estimated from testing. This is not an untouched external calibration-and-test protocol.
-- `model_err` compares predicted and measured spectra after applying the same calibration curve. It differs from error against nominal metal concentration.
-- The documented held-out-combination split must be verified in the recovered `split_plan` and stochastic sampler implementation. Augmented samples share measured replicate pools.
-- A readout standard-deviation ratio near one is not sufficient to establish unbiased predictions or a correct calibration slope.
-- Teacher regularization, replay of earlier conditions, and freezing older experts aim to reduce forgetting. They are not an independently demonstrated invariance guarantee.
-- Several archived outputs are rounded; their values should not be represented as high-precision independent measurements.
+## Interpretation of archived outputs
 
-## Standalone script assumptions
+- Testing tables include only 3 and 5 ppm metal concentrations, which limits calibration-range conclusions.
+- Historical evaluation fits calibration using clean rows in the testing table and estimates repeatability from testing. It is not an untouched external calibration/test protocol.
+- `model_err` compares predicted and measured spectral readouts under the same calibration, rather than errors against nominal concentration.
+- The model source is needed to verify split logic and checkpoint lineage. Augmented examples may share measured replicate pools.
+- Rounded numerical tables support descriptive summaries, not high-precision independent performance claims.
+- An archived stage-1 Cu readout anomaly remains unresolved. No new model results are claimed.
 
-The interactive calibration script retains a division by 10 when reading nominal test concentrations. It also uses a different area-integration treatment for training and testing in its area-normalization option. Both behaviors come from the source and require experimental justification before reuse with new data. Check these conventions before applying the script to a different measurement protocol.
+## Validation scope
 
-The raw-file processor assumes one background plus ten signal files per group and a specific wavelength grid for baseline subtraction. Its summary calculations preserve the original missing/incomplete-group handling and standard-deviation conventions.
-
-## Implementation and validation
-
-Paths are configurable, and runs write to isolated output directories. The raw-file processor leaves selected input files unchanged. Standalone analysis scripts use entry-point guards, so importing them does not start file dialogs or processing.
-
-Validation covers Python syntax, notebook structure, numerical-table integrity, and execution of the archived-result summary. Readiness checks report the absent model module before notebook execution. Full neural training and inference remain unavailable without that dependency.
+`python scripts/check_analysis.py` tests synthetic acquisition groups and exact analytical cases, including rejected incomplete groups, invalid references, and zero calibration slopes. `summarize_archived_results.py` is run against all four included stage tables. Syntax and numerical-table hashes are checked separately. Neural training and inference cannot be reproduced without the original model source.

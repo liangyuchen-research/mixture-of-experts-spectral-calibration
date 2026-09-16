@@ -13,7 +13,7 @@ Cu, Ni, Zn, Na, Ca, K, Mg
 
 The raw record parser reads groups of 11 TXT files: one background record followed by ten signal records. It subtracts the background and decodes conditions from the filename. The `Conc` filename field is assigned to Cu, Ni, and Zn, so the raw acquired metal levels are diagonal before augmentation. The parser assumes ordered files and a matching 1,948-point instrument grid.
 
-`Mean.csv` summarizes available replicates by condition. `Mean_3.csv` averages consecutive groups of three observations and omits the incomplete remainder from the derived table. This omission is part of the original aggregation algorithm; source records remain intact. The example in `data/examples/` preserves the header and first six rows from the sodium-matrix `Mean_3.csv`.
+`Mean.csv` summarizes available replicates by condition. `Mean_3.csv` averages consecutive groups of three observations and omits the incomplete remainder from the derived table. This omission is part of the original aggregation algorithm; source records remain intact. `data/examples/sodium_matrix_mean_spectra.csv` preserves the header and first six rows of the sodium-matrix `Mean_3.csv`. The complete `sodium_matrix_calibration.csv` table is copied byte-for-byte from the original sodium-matrix `Mean.csv` and supports the documented calibration command.
 
 Acquisition-field units are not inferred where the supplied files do not establish them. Metal/interferent concentrations are labeled in ppm by the original calibration workflow.
 

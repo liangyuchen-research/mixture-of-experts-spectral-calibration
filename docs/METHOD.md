@@ -1,4 +1,6 @@
-# Method and visible implementation
+# Archived model method
+
+These notes describe the preserved private version-6 notebooks and technical note. The public repository exposes the independent measurement and calibration workflows.
 
 ## Modeling direction
 

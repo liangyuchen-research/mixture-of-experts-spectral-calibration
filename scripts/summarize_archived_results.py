@@ -20,24 +20,34 @@ def summarize(path):
         values = [float(row[field]) for row in rows]
         if not values or not all(math.isfinite(value) for value in values):
             raise ValueError(f"Empty or nonfinite archived error column: {path.name}/{field}")
-        summaries.append({
-            "table": path.stem, "metal": metal, "n": len(values),
-            "MAE_ppm": statistics.fmean(abs(value) for value in values),
-            "bias_ppm": statistics.fmean(values),
-            "RMSE_ppm": math.sqrt(statistics.fmean(value * value for value in values)),
-            "provenance": "archived_rounded_error_column",
-        })
+        summaries.append(
+            {
+                "table": path.stem,
+                "metal": metal,
+                "n": len(values),
+                "MAE_ppm": statistics.fmean(abs(value) for value in values),
+                "bias_ppm": statistics.fmean(values),
+                "RMSE_ppm": math.sqrt(statistics.fmean(value * value for value in values)),
+                "provenance": "archived_rounded_error_column",
+            }
+        )
     return summaries
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--directory", type=Path, default=ROOT / "analysis/archived_results/model_v6")
+    parser.add_argument(
+        "--directory", type=Path, default=ROOT / "analysis/archived_results/model_v6"
+    )
     args = parser.parse_args()
     tables = sorted(args.directory.glob("*_stage*.csv"))
     if not tables:
         parser.error("No archived stage-result tables found.")
-    writer = csv.DictWriter(sys.stdout, fieldnames=["table", "metal", "n", "MAE_ppm", "bias_ppm", "RMSE_ppm", "provenance"], lineterminator="\n")
+    writer = csv.DictWriter(
+        sys.stdout,
+        fieldnames=["table", "metal", "n", "MAE_ppm", "bias_ppm", "RMSE_ppm", "provenance"],
+        lineterminator="\n",
+    )
     writer.writeheader()
     for table in tables:
         writer.writerows(summarize(table))
