@@ -2,9 +2,9 @@
 
 ## Missing source
 
-The canonical version-6 notebooks all import `spice_moe.py`. That module was absent from the supplied source tree and additional local filename/content searches. The original analysis documentation also references absent `matrix_calibration.py`, `calibration_per_matrix.py`, and additional analysis notebooks.
+The canonical version-6 notebooks all import `spice_moe.py`. The matching module is not available in this repository or its research archive. The original analysis documentation also references absent `matrix_calibration.py`, `calibration_per_matrix.py`, and additional analysis notebooks.
 
-Model architecture, loss computation, sampling, splitting, checkpoint reconstruction, and most evaluation functions are delegated to the missing shared module. Syntax checks cannot establish runtime correctness without it. The notebooks now fail with a clear missing-runtime message before creating run artifacts. No substitute implementation was created.
+Model architecture, loss computation, sampling, splitting, checkpoint reconstruction, and most evaluation functions are delegated to the missing shared module. Syntax checks cannot establish runtime correctness without it. The notebooks now fail with a clear missing-runtime message before creating run artifacts.
 
 ## Historical evidence
 
@@ -24,21 +24,12 @@ The archived stage-1 output contains a severe Cu readout anomaly, while later-st
 
 ## Standalone script assumptions
 
-The interactive calibration script retains a division by 10 when reading nominal test concentrations. It also uses a different area-integration treatment for training and testing in its area-normalization option. Both behaviors come from the source and require experimental justification before reuse with new data. They were not silently changed during organization.
+The interactive calibration script retains a division by 10 when reading nominal test concentrations. It also uses a different area-integration treatment for training and testing in its area-normalization option. Both behaviors come from the source and require experimental justification before reuse with new data. Check these conventions before applying the script to a different measurement protocol.
 
 The raw-file processor assumes one background plus ten signal files per group and a specific wavelength grid for baseline subtraction. Its summary calculations preserve the original missing/incomplete-group handling and standard-deviation conventions.
 
-## Curation changes
+## Implementation and validation
 
-- Renamed the two standalone scripts and grouped latest notebooks, analysis tables, and documentation.
-- Translated remaining non-English narrative, prompts, and docstrings. Rephrased unsupported guarantees in comments as methodological intentions.
-- Cleared copied notebook outputs and incidental metadata; the original executed files remain in the private archive.
-- Replaced personal absolute paths with configurable inputs and isolated run directories.
-- Redirected CSV exports from the raw-file processor to a fresh output directory so selected inputs are not overwritten.
-- Added entry-point guards and lightweight inspection utilities. Numerical model calls, hyperparameters, raw arrays, and experimental calculations were preserved.
+Paths are configurable, and runs write to isolated output directories. The raw-file processor leaves selected input files unchanged. Standalone analysis scripts use entry-point guards, so importing them does not start file dialogs or processing.
 
-## Checks performed
-
-Every original file was copied and verified with SHA-256. Curated Python files and notebook code cells were compiled without running training. Notebook structure, empty outputs, English-only text/path names, personal-path removal, numerical literal preservation, and archived CSV integrity were checked. The archived-result summary was executed on the supplied tables using standard-library arithmetic.
-
-These checks establish a clean, traceable source package. They do not reproduce the neural model or certify the scientific conclusions.
+Validation covers Python syntax, notebook structure, numerical-table integrity, and execution of the archived-result summary. Readiness checks report the absent model module before notebook execution. Full neural training and inference remain unavailable without that dependency.

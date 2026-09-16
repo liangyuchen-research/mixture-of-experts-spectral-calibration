@@ -1,86 +1,83 @@
 # Mixture-of-Experts Spectral Calibration
 
-Research workflows for modeling Na, Ca, K, and Mg matrix interference in plasma emission spectra used for Cu, Ni, and Zn quantification. The version-6 design predicts an interfered spectrum from a clean reference and an interference condition, supporting analysis of matrix-dependent calibration behavior.
+Research on modeling Na, Ca, K, and Mg matrix interference in plasma emission spectra for Cu, Ni, and Zn quantification. The staged workflow predicts an interfered spectrum from a clean reference and an interference condition, then analyzes the resulting concentration calibration.
 
-**Snapshot status:** the original shared module `spice_moe.py` is missing from the supplied files. This repository preserves the latest orchestration notebooks, standalone spectrometer/calibration scripts, and archived numerical results. Model training and inference require recovery of that exact module. No replacement model has been invented.
+**Implementation status:** the shared model module, `spice_moe.py`, is not included. The notebooks document the staged experiments but require that module for training and inference. The standalone measurement-processing scripts and archived-result summary utility are available independently.
 
 ## Research approach
 
-The documented architecture combines ion-specific experts, a shared router, and a saturation gate. Three stages introduce interferents progressively:
+The design combines ion-specific experts, a shared router, and a saturation gate. Training introduces interferents in three stages:
 
-| Stage | Active experts | Training intent |
+| Stage | Active experts | Training approach |
 | --- | --- | --- |
 | 1 | Na, Ca | Train the initial experts and shared interaction components |
-| 2 | Na, Ca, K | Add K, freeze earlier experts, and use a stage-1 teacher with rehearsal |
+| 2 | Na, Ca, K | Add K with frozen earlier experts, a stage-1 teacher, and rehearsal |
 | 3 | Na, Ca, K, Mg | Add Mg with a stage-2 teacher and earlier-condition rehearsal |
 
-The saturation gate is intended to represent interactions that a purely additive sum of single-ion effects would miss. Calibration readouts depend on peak, background, and reference-wavelength intensities, so the documented objectives include both metal windows and spectral-background behavior. [Method notes](docs/METHOD.md) distinguish the visible workflow from details delegated to the missing module.
+The saturation gate models interactions beyond additive single-ion effects. Calibration depends on peak, background, and reference-wavelength intensities, so the objectives consider both metal-emission windows and spectral-background behavior. [Method notes](docs/METHOD.md) describe the workflow and distinguish visible notebook operations from functions in the missing module.
 
-## Repository contents
+## Repository guide
 
 | Path | Content |
 | --- | --- |
-| `notebooks/00_run_all.ipynb` | Central configuration and sequential notebook runner |
-| `notebooks/01_data_preprocessing.ipynb` | Compact spectral replicate banks and sampling plans |
-| `notebooks/02_stage1_naca.ipynb` | Na/Ca training stage |
-| `notebooks/03_stage2_add_k.ipynb` | Incremental K stage |
-| `notebooks/04_stage3_add_mg.ipynb` | Incremental Mg stage |
-| `notebooks/05_testing_evaluation.ipynb` | Spectral evaluation and concentration readout export |
+| `notebooks/00_run_all.ipynb` | Configuration and sequential notebook runner |
+| `notebooks/01_data_preprocessing.ipynb` | Spectral replicate banks and sampling plans |
+| `notebooks/02_stage1_naca.ipynb` | Initial Na/Ca training stage |
+| `notebooks/03_stage2_add_k.ipynb` | Incremental potassium stage |
+| `notebooks/04_stage3_add_mg.ipynb` | Incremental magnesium stage |
+| `notebooks/05_testing_evaluation.ipynb` | Spectral evaluation and concentration readouts |
 | `scripts/process_spectrometer_records.py` | Raw-file parsing, background subtraction, and replicate aggregation |
 | `scripts/calibrate_matrix_condition.py` | Interactive matrix-specific linear calibration |
-| `scripts/summarize_archived_results.py` | Standard-library summary of archived model-error tables |
-| `analysis/archived_results/` | Unchanged historical CSV results, grouped by analysis type |
-| `data/examples/` | A small measured-spectrum table for inspecting the format |
-| `src/README.md` | Missing shared-runtime description |
+| `scripts/summarize_archived_results.py` | Summary of stored model-error tables |
+| `analysis/archived_results/` | Historical numerical results grouped by analysis |
+| `data/examples/` | Measured-spectrum table for format inspection |
 
-## Inspect the archived results
+## Inspect the numerical results
 
-The numerical summary utility runs with the Python standard library and does not load model weights:
+The summary utility uses only the Python standard library:
 
 ```bash
 python scripts/summarize_archived_results.py
 ```
 
-It calculates MAE, signed bias, and RMSE from the **stored, rounded model-error columns**. These are summaries of historical outputs, not newly reproduced model results. The original measurements, complete executed notebooks, and model files are retained in a separate private archive.
+It calculates MAE, signed bias, and RMSE from stored, rounded error columns. These are summaries of historical outputs, not a new model evaluation. The [analysis notes](analysis/README.md) explain the table schemas and interpretation.
 
-## Environment and standalone scripts
+## Standalone measurement analysis
 
-Use a separate Python environment for the scientific dependencies:
+Create a separate Python environment and activate it with `.venv\Scripts\activate` on Windows or `source .venv/bin/activate` on macOS/Linux.
 
 ```bash
 python -m venv .venv
-# Activate the environment for your shell.
-python -m pip install -r requirements.txt
-python scripts/check_readiness.py
-```
-
-The requirements were inferred from visible imports. They are not an exact research environment lockfile, and the missing module may require additional dependencies or a specific TensorFlow/Keras version. The readiness command reports missing dependencies without starting training.
-
-The standalone scripts do not depend on `spice_moe.py`. They use Tk file dialogs and require a graphical desktop:
-
-```bash
+# Activate the environment before continuing.
+python -m pip install -r requirements-analysis.txt
 python scripts/process_spectrometer_records.py
 python scripts/calibrate_matrix_condition.py
 ```
 
-Select the intended measurement folder or CSV when prompted. The record-processing script writes derived tables to a fresh directory under `results/`; it does not overwrite the selected input files. Original numeric calculations and interactive choices are retained.
+These scripts use Tk file dialogs and require a graphical desktop. Select the measurement folder or CSV when prompted. Record processing writes derived tables to a fresh directory under `results/`, leaving input files unchanged. The [reproduction notes](docs/REPRODUCIBILITY.md) explain the expected record groups and calibration assumptions.
 
-## Restore data and recover the model workflow
+## Model workflow requirements
 
-The complete private archive contains 3,071 files totaling approximately 570 MB. All original files were copied and verified using SHA-256 before curation. A manifest identifies 59 artifacts used by the latest workflow, including prepared datasets, raw summary tables, and stage checkpoints.
+`requirements.txt` lists dependencies visible in the notebooks. The missing module may require a specific TensorFlow/Keras version or additional packages. Check availability without starting training:
 
 ```bash
-python scripts/restore_local_data.py --archive-root "/path/to/private/raw-archive"
+python scripts/check_readiness.py
 ```
 
-The utility verifies hashes, copies the listed artifacts into `data/local/`, and refuses to replace files with different content. It does not modify the archive. The manifest is not a public download endpoint.
+The command reports dependencies and exits with a nonzero status while the model runtime is unavailable. Recover the matching `spice_moe.py` into `src/` before attempting a model run.
 
-After recovering the matching `spice_moe.py` into `src/`, launch Jupyter from the repository root. The runner creates a separate experiment directory, copies prepared data/checkpoints into that directory, and shares it across stages. `MOE_DATA_DIR` selects another local input directory; `MOE_OUTPUT_DIR` selects the output root. The notebook runner creates a fresh run; individually executed stage notebooks share `MOE_RUN_DIR` within the session.
+The external-artifact manifest lists 59 prepared datasets, measurement tables, and stage checkpoints. If the matching research archive is available, restore them with:
 
-The preserved full training defaults are 1,200 epochs for stage 1 and 800 for stages 2 and 3, with early stopping. No training or inference was launched during repository preparation.
+```bash
+python scripts/restore_local_data.py --archive-root "/path/to/research-archive"
+```
 
-## Interpretation and provenance
+The utility verifies checksums and copies inputs into `data/local/` without overwriting different content. The manifest is an inventory, not a download service. Start Jupyter from the repository root after restoring the runtime and inputs. `MOE_DATA_DIR` selects the input directory and `MOE_OUTPUT_DIR` selects the output root. The runner creates a fresh experiment directory and shares it across stages through `MOE_RUN_DIR`.
 
-See [data documentation](docs/DATA.md), [archived-result notes](analysis/README.md), and [reproducibility limits](docs/REPRODUCIBILITY.md). The snapshot contains historical experiments with unresolved behavior; it does not establish general accuracy, no-forgetting guarantees, or deployment readiness.
+Training defaults are 1,200 epochs for stage 1 and 800 for stages 2 and 3, with early stopping. Full training and inference have not been reproduced from this repository.
 
-All curated filenames and narrative text are English. Original files, older code versions, slides, and unreviewed figures remain in the private archive. File mappings are recorded in [FILE_MAPPING.json](docs/FILE_MAPPING.json). No license was supplied, so none has been invented; contact the repository owner about reuse and access to complete data.
+## Interpretation and data use
+
+Archived experiments include unresolved calibration behavior. In particular, model-error columns compare predicted and measured spectral readouts under a shared calibration, rather than measuring error against nominal concentration. See the [data documentation](docs/DATA.md) and [reproduction limits](docs/REPRODUCIBILITY.md) before interpreting results.
+
+The [file mapping](docs/FILE_MAPPING.json) records source and repository paths. Original numerical tables and archived model files are retained. No software or dataset license is included; contact the repository owner regarding reuse or access to complete data.
