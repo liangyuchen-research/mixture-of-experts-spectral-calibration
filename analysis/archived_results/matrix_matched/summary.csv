@@ -1,0 +1,31 @@
+set,strategy,metal,n,MAE,bias,RMSE
+validation,clean-only,Cu,228,0.546,-0.501,0.707
+validation,clean-only,Ni,228,0.761,-0.656,0.988
+validation,clean-only,Zn,228,0.335,-0.122,0.476
+validation,matrix-matched,Cu,228,0.0992,0.00577,0.136
+validation,matrix-matched,Ni,228,0.185,0.0299,0.229
+validation,matrix-matched,Zn,228,0.101,0.0144,0.136
+testing (26 conds),clean-only,Cu,93,1.22,-1.22,1.32
+testing (26 conds),clean-only,Ni,93,1.58,-1.58,1.67
+testing (26 conds),clean-only,Zn,93,0.879,-0.831,0.964
+testing (26 conds),matrix-matched,Cu,93,0.342,-0.274,0.455
+testing (26 conds),matrix-matched,Ni,93,0.297,-0.158,0.385
+testing (26 conds),matrix-matched,Zn,93,0.528,-0.485,0.661
+testing (26 conds),matched+slope,Cu,93,1.82,1.82,1.85
+testing (26 conds),matched+slope,Ni,93,0.307,0.0633,0.392
+testing (26 conds),matched+slope,Zn,93,0.447,0.325,0.532
+testing (26 conds),matched+slope+intercept,Cu,93,0.355,-0.26,0.428
+testing (26 conds),matched+slope+intercept,Ni,93,0.598,0.537,0.693
+testing (26 conds),matched+slope+intercept,Zn,93,0.407,0.258,0.488
+testing (exact-match 7),clean-only,Cu,6,0.57,-0.57,0.679
+testing (exact-match 7),clean-only,Ni,6,0.481,-0.481,0.497
+testing (exact-match 7),clean-only,Zn,6,0.721,-0.721,0.749
+testing (exact-match 7),matrix-matched,Cu,33,0.381,-0.303,0.473
+testing (exact-match 7),matrix-matched,Ni,33,0.289,-0.0914,0.338
+testing (exact-match 7),matrix-matched,Zn,33,0.563,-0.557,0.655
+testing (exact-match 7),matched+slope,Cu,33,1.88,1.88,1.94
+testing (exact-match 7),matched+slope,Ni,33,0.348,0.145,0.392
+testing (exact-match 7),matched+slope,Zn,33,0.336,0.28,0.444
+testing (exact-match 7),matched+slope+intercept,Cu,33,0.277,-0.072,0.374
+testing (exact-match 7),matched+slope+intercept,Ni,33,0.599,0.58,0.73
+testing (exact-match 7),matched+slope+intercept,Zn,33,0.297,0.213,0.402

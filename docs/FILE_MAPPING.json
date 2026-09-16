@@ -1,0 +1,99 @@
+[
+  {
+    "archive_relative_path": "Code v6/00_run_all.ipynb",
+    "curated_path": "notebooks/00_run_all.ipynb"
+  },
+  {
+    "archive_relative_path": "Code v6/01_data_preprocessing.ipynb",
+    "curated_path": "notebooks/01_data_preprocessing.ipynb"
+  },
+  {
+    "archive_relative_path": "Code v6/02_stage1_naca.ipynb",
+    "curated_path": "notebooks/02_stage1_naca.ipynb"
+  },
+  {
+    "archive_relative_path": "Code v6/03_stage2_add_k.ipynb",
+    "curated_path": "notebooks/03_stage2_add_k.ipynb"
+  },
+  {
+    "archive_relative_path": "Code v6/04_stage3_add_mg.ipynb",
+    "curated_path": "notebooks/04_stage3_add_mg.ipynb"
+  },
+  {
+    "archive_relative_path": "Code v6/05_testing_evaluation.ipynb",
+    "curated_path": "notebooks/05_testing_evaluation.ipynb"
+  },
+  {
+    "archive_relative_path": "Calibration curve with normalization (MoE).py",
+    "curated_path": "scripts/calibrate_matrix_condition.py"
+  },
+  {
+    "archive_relative_path": "High_resolution_spectrometer_data_process (MoE).py",
+    "curated_path": "scripts/process_spectrometer_records.py"
+  },
+  {
+    "archive_relative_path": "Analysis v6/matrix_matched/calibration_curves.csv",
+    "curated_path": "analysis/archived_results/matrix_matched/calibration_curves.csv",
+    "transformation": "Byte-for-byte copy of archived result table"
+  },
+  {
+    "archive_relative_path": "Analysis v6/matrix_matched/summary.csv",
+    "curated_path": "analysis/archived_results/matrix_matched/summary.csv",
+    "transformation": "Byte-for-byte copy of archived result table"
+  },
+  {
+    "archive_relative_path": "Analysis v6/matrix_matched/testing_rows.csv",
+    "curated_path": "analysis/archived_results/matrix_matched/testing_rows.csv",
+    "transformation": "Byte-for-byte copy of archived result table"
+  },
+  {
+    "archive_relative_path": "Analysis v6/matrix_matched/validation_rows.csv",
+    "curated_path": "analysis/archived_results/matrix_matched/validation_rows.csv",
+    "transformation": "Byte-for-byte copy of archived result table"
+  },
+  {
+    "archive_relative_path": "Analysis v6/model_v6/calibration_slope.csv",
+    "curated_path": "analysis/archived_results/model_v6/calibration_slope.csv",
+    "transformation": "Byte-for-byte copy of archived result table"
+  },
+  {
+    "archive_relative_path": "Analysis v6/model_v6/testing_stage2.csv",
+    "curated_path": "analysis/archived_results/model_v6/testing_stage2.csv",
+    "transformation": "Byte-for-byte copy of archived result table"
+  },
+  {
+    "archive_relative_path": "Analysis v6/model_v6/testing_stage3.csv",
+    "curated_path": "analysis/archived_results/model_v6/testing_stage3.csv",
+    "transformation": "Byte-for-byte copy of archived result table"
+  },
+  {
+    "archive_relative_path": "Analysis v6/model_v6/validation_stage2.csv",
+    "curated_path": "analysis/archived_results/model_v6/validation_stage2.csv",
+    "transformation": "Byte-for-byte copy of archived result table"
+  },
+  {
+    "archive_relative_path": "Analysis v6/model_v6/validation_stage3.csv",
+    "curated_path": "analysis/archived_results/model_v6/validation_stage3.csv",
+    "transformation": "Byte-for-byte copy of archived result table"
+  },
+  {
+    "archive_relative_path": "Analysis v6/per_matrix_R2/calibration_curves.csv",
+    "curated_path": "analysis/archived_results/per_matrix_r2/calibration_curves.csv",
+    "transformation": "Byte-for-byte copy of archived result table"
+  },
+  {
+    "archive_relative_path": "Analysis v6/per_matrix_R2/partA_clean_curve_on_training.csv",
+    "curated_path": "analysis/archived_results/per_matrix_r2/partA_clean_curve_on_training.csv",
+    "transformation": "Byte-for-byte copy of archived result table"
+  },
+  {
+    "archive_relative_path": "Analysis v6/per_matrix_R2/testing_predictions.csv",
+    "curated_path": "analysis/archived_results/per_matrix_r2/testing_predictions.csv",
+    "transformation": "Byte-for-byte copy of archived result table"
+  },
+  {
+    "archive_relative_path": "20260128_MoE Na/Mean_3.csv",
+    "curated_path": "data/examples/sodium_matrix_mean_spectra.csv",
+    "transformation": "Header and first six rows; values unchanged"
+  }
+]

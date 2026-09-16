@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.ipynb_checkpoints/
+data/local/
+results/
+*.h5
+*.npz
+*.pptx
+*.mp4
+run_config.json
