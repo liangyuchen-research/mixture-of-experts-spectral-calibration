@@ -1,60 +1,63 @@
-# Spectral Measurement Processing and Matrix Calibration
+# Spectral Measurement Processing and Matrix-Matched Calibration
 
-Measurement processing and concentration calibration for studying Na, Ca, K, and Mg interference in plasma emission spectra. This repository provides the available analysis tools associated with the mixture-of-experts research: detector-record parsing, background subtraction, replicate aggregation, matrix-specific calibration, and summaries of archived numerical results.
+[![checks](https://github.com/liangyuchen-research/mixture-of-experts-spectral-calibration/actions/workflows/checks.yml/badge.svg)](https://github.com/liangyuchen-research/mixture-of-experts-spectral-calibration/actions/workflows/checks.yml)
+
+Tools and archived results for an ongoing study of how Na, Ca, K and Mg in solution distort plasma emission spectra, and how much matrix-aware calibration recovers. The public part of the project is the measurement-processing and calibration toolchain plus the numerical results of the archived analyses; the mixture-of-experts interference model that this work feeds is still under development and is not distributed here (see [Scope](#scope)).
+
+Developed at the Plasma Engineering Laboratory, National Taiwan University, as a follow-up to the [Talanta 2026 quantification work](https://github.com/liangyuchen-research/plasma-spectroscopy-quantification).
+
+## What the archived analyses show
+
+![Calibration slope of Cu, Ni and Zn as a function of added Na, Ca, K and Mg](docs/figures/calibration_slope_vs_matrix.png)
+
+*Calibration slope (line intensity per ppm) relative to clean water when a single interfering ion is added at 125–500 ppm, from `analysis/archived_results/per_matrix_r2/calibration_curves.csv`. Sodium and calcium suppress the Ni response by up to about 35 %; the Zn response is enhanced or suppressed depending on the ion.*
+
+![Matrix-matched versus clean-water calibration on the test measurements](docs/figures/matrix_matched_vs_clean.png)
+
+*Test error of the two calibration strategies on 93 measurements over 26 Na/Ca/K/Mg conditions (3 and 5 ppm). Using the calibration curve of the matching matrix condition instead of the clean-water curve cuts the mean absolute error from 1.22 → 0.34 ppm (Cu), 1.58 → 0.30 ppm (Ni) and 0.88 → 0.53 ppm (Zn), and removes most of the systematic under-reading. Both figures are produced by `scripts/make_figures.py` from the archived tables.*
 
 ## Available workflows
 
 | Entry point | Purpose |
 | --- | --- |
-| `scripts/process_spectrometer_records.py` | Convert detector records into background-corrected measurements and replicate summaries |
-| `scripts/calibrate_matrix_condition.py` | Fit Cu, Ni, or Zn calibration within a selected Na/Ca/K/Mg condition |
-| `scripts/summarize_archived_results.py` | Summarize historical model-error tables |
-| `scripts/check_analysis.py` | Check parsing, aggregation, calibration, and invalid-input handling |
-| `analysis/archived_results/` | Original numerical outputs grouped by analysis |
-| `data/examples/` | Measured-spectrum table for inspecting the data format |
+| `scripts/process_spectrometer_records.py` | Convert raw detector records (one background + ten signal files per group, 1,948 wavelength rows each) into background-corrected measurements and replicate summaries (`Concat`, `Mean`, `STD`, `RSD`, `Mean_3`) |
+| `scripts/calibrate_matrix_condition.py` | Fit a Cu, Ni or Zn calibration within a selected Na/Ca/K/Mg condition, with optional reference-line or area normalization, and export predictions |
+| `scripts/summarize_archived_results.py` | MAE, bias and RMSE from the archived model-error tables |
+| `scripts/check_analysis.py` | Tests for parsing, aggregation, calibration recovery and invalid-input handling |
+| `scripts/make_figures.py` | Regenerates the figures on this page |
+| `analysis/archived_results/` | Original numerical outputs, grouped by analysis ([notes](analysis/README.md)) |
+| `data/examples/` | A measured-spectrum table for inspecting the data format ([notes](data/examples/README.md)) |
 
-## Setup
+## Quick start
 
-Use Python 3.10–3.12 in a virtual environment.
+Python 3.10–3.12; only NumPy, pandas, Matplotlib and scikit-learn are needed.
 
 ```bash
-python -m venv .venv
-# Activate the environment before continuing.
+python -m venv .venv && source .venv/bin/activate      # .venv\Scripts\activate on Windows
 python -m pip install -r requirements.txt
 python scripts/check_analysis.py
 python scripts/summarize_archived_results.py
+python scripts/make_figures.py
 ```
 
-No TensorFlow installation is required for these analysis workflows.
-
-## Process detector records
+Process a folder of detector records:
 
 ```bash
 python scripts/process_spectrometer_records.py measurements --output results/measurement-run
 ```
 
-The input contains chronologically sorted groups of **one background record followed by ten signal records**, with 1,948 tab-separated wavelength/intensity rows per file. Acquisition conditions are encoded in the filenames. The processor checks file groups and wavelength consistency, subtracts the background, and writes `Concat.csv`, `Mean.csv`, `STD.csv`, `RSD.csv`, and `Mean_3.csv` to a new output folder.
-
-Replicate summaries use sample standard deviations. `Mean_3.csv` averages complete consecutive groups of three within each condition, leaving a final one or two observations out of that specific summary. Zero-mean relative standard deviations are undefined and exported as empty values. Input files are never overwritten.
-
-## Fit a matrix-specific calibration
+Fit a matrix-specific calibration on the example table (the four values are the Na, Ca, K and Mg loads of the condition):
 
 ```bash
 python scripts/calibrate_matrix_condition.py data/examples/sodium_matrix_calibration.csv --metal Cu --matrix 0 0 0 0 --output results/calibration-run
 ```
 
-The four matrix values specify Na, Ca, K, and Mg. Select a condition actually present in the input table. The command exports the slope, intercept, and training R² to `calibration.json`. Add `--testing-csv` to export predictions. For testing concentrations already expressed in ppm, set `--test-concentration-divisor 1`; the default of 10 retains the original experiment convention.
+The command exports slope, intercept and training R² to `calibration.json`; add `--testing-csv` to export predictions. Testing concentrations follow the original convention of a divisor of 10 unless `--test-concentration-divisor 1` is given. Replicate summaries use sample standard deviations, and `Mean_3.csv` averages complete consecutive groups of three. Inputs are never overwritten.
 
-Optional reference-line and area normalization are exposed through `--normalization`. The historical area option uses different training and testing integration rules. See [reproduction notes](docs/REPRODUCIBILITY.md) before using it with new measurements.
+## Scope
 
-## Research context and archived results
+The research direction is a mixture-of-experts model of the *forward* interference process (clean spectrum + matrix condition → predicted interfered spectrum, with one expert per ion and staged training). Its model module is not part of this snapshot, so the training notebooks are kept privately and no runnable model is provided or claimed here; the archived `model_v6` tables are its historical outputs, summarised by `summarize_archived_results.py` from their rounded error columns. The [method notes](docs/METHOD.md) describe the modelling scheme, and the [reproduction notes](docs/REPRODUCIBILITY.md) list the protocol details that matter when reading the archived numbers (testing tables contain only 3 and 5 ppm; calibration was fitted on clean rows of the testing table).
 
-The original research investigated staged ion-specific experts and interference interactions. The shared `spice_moe.py` model implementation is absent from the supplied source archive. Model-training notebooks that depend on it are preserved privately, rather than supplied as executable entry points here. This repository does **not** currently provide a runnable mixture-of-experts model.
+## Data and code use
 
-The included result tables are historical outputs. The summary command reports MAE, bias, and RMSE computed from their rounded error columns; it does not retrain or evaluate a recovered model. [Method notes](docs/METHOD.md), [analysis notes](analysis/README.md), and [data documentation](docs/DATA.md) explain their provenance and limits.
-
-## Validation and data use
-
-The analysis checks exercise raw-record parsing, known replicate means and sample standard deviations, calibration recovery, invalid input rejection, and preservation of input files. They do not establish a new scientific benchmark. Full research datasets and checkpoints remain in the source archive, with checksums in `data/external_artifacts.json`.
-
-Original source and numerical data are preserved. No software or dataset license is included. Contact the repository owner regarding reuse or additional research materials.
+Original source and numerical data are preserved unchanged; checksums for the full research datasets are in `data/external_artifacts.json`. Contact the repository owner regarding reuse or additional research materials.
